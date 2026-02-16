@@ -1,0 +1,125 @@
+/* Section headers */
+.section-header {
+    color: #2c3e50;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 1rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #eee;
+}
+
+/* Input section */
+.stNumberInput {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 0.5rem;
+}
+
+/* Button styling */
+.stButton > button {
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    transition: all 0.3s ease;
+}
+
+.stButton > button:hover {
+    background-color: #e9ecef;
+    border-color: #bbb;
+}
+
+/* Table styling */
+.stTable {
+    border: 2px solid #e0e0e0 !important;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.stTable thead tr th {
+    background-color: #f8f9fa !important;
+    font-weight: bold !important;
+    border-bottom: 2px solid #dee2e6 !important;
+    padding: 0.75rem !important;
+}
+
+.stTable tbody tr td {
+    padding: 0.75rem !important;
+    border-bottom: 1px solid #dee2e6 !important;
+}
+
+/* Grid container for neighborhood visualization */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    gap: 0;
+    justify-content: center;
+    margin: 1rem auto;
+    width: fit-content;
+}
+
+/* Grid cell styling */
+.grid-cell {
+    border: 2px solid #ff0000;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: monospace;
+    margin: 0;
+}
+
+/* String example styling */
+.string-example {
+    text-align: center;
+    font-family: monospace;
+    font-size: 1.2rem;
+    margin: 1rem 0;
+}
+
+.string-example span.central {
+    text-decoration: underline;
+}
+
+/* Array display */
+.array-display {
+    font-family: monospace;
+    background-color: #f8f9fa;
+    padding: 0.5rem;
+    border-radius: 5px;
+    border: 1px solid #dee2e6;
+}
+
+/* Success message styling */
+.success-message {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+    padding: 1rem;
+    border-radius: 5px;
+    margin-top: 1rem;
+}
+
+/* Title styling */
+h1 {
+    color: #2c3e50;
+    padding-bottom: 1rem;
+    border-bottom: 3px solid #eee;
+    margin-bottom: 2rem;
+}
+
+/* Reduce vertical whitespace inside Streamlit tables */
+div[data-testid="stTable"] table {
+    border-collapse: collapse !important;
+}
+
+div[data-testid="stTable"] th,
+div[data-testid="stTable"] td {
+    padding: 2px 4px !important;
+    line-height: 1.1 !important;
+}
+
+div[data-testid="stTable"] tbody tr {
+    height: auto !important;
+}
