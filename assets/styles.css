@@ -70,12 +70,17 @@
     margin: 0;
 }
 
+/* Remove default paragraph spacing inside Streamlit markdown blocks */
+div[data-testid="stMarkdownContainer"] p {
+    margin: 0.2rem 0 !important;
+}
+
 /* String example styling */
 .string-example {
     text-align: center;
     font-family: monospace;
     font-size: 1.2rem;
-    margin: 1rem 0;
+    margin: 0.1rem 0;
 }
 
 .string-example span.central {
@@ -107,19 +112,4 @@ h1 {
     padding-bottom: 1rem;
     border-bottom: 3px solid #eee;
     margin-bottom: 2rem;
-}
-
-/* Reduce vertical whitespace inside Streamlit tables */
-div[data-testid="stTable"] table {
-    border-collapse: collapse !important;
-}
-
-div[data-testid="stTable"] th,
-div[data-testid="stTable"] td {
-    padding: 2px 4px !important;
-    line-height: 1.1 !important;
-}
-
-div[data-testid="stTable"] tbody tr {
-    height: auto !important;
 }

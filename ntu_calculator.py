@@ -1,4 +1,5 @@
 import streamlit as st
+import pandas as pd
 from itertools import product
 import random
 import logging
@@ -127,43 +128,87 @@ def get_neighborhood(tu_array, mode='LTP'):
 
     st.markdown(grid_html, unsafe_allow_html=True)
 
-    st.markdown('<div class="section-header">String Example</div>', unsafe_allow_html=True)
-    st.write("One possible 9-character sequence that matches the input array:")
+    st.markdown('<div class="section-header">Nucleotide Example</div>', unsafe_allow_html=True)
+    st.write("9-nucleotides matching sequence:")
 
-    char_values = {'G': 1, 'A': 2, 'T': 3, 'C': 4}
+    nucleotide_values = {'G': 0.0806,
+                         'A': 0.1260,
+                         'T': 0.1335,
+                         'C': 0.1340}
+    
+    aminoacid_values = {'Leu': 0.0000,
+                        'Ile': 0.0000,
+                        'Asn': 0.0036,
+                        'Gly': 0.0050,
+                        'Val': 0.0057,
+                        'Glu': 0.0058,
+                        'Pro': 0.0198,
+                        'His': 0.0242,
+                        'Lys': 0.0371,
+                        'Ala': 0.0373,
+                        'Tyr': 0.0516,
+                        'Trp': 0.0548,
+                        'Gln': 0.0761,
+                        'Met': 0.0823,
+                        'Ser': 0.0829,
+                        'Cys': 0.0829,
+                        'Thr': 0.0941,
+                        'Phe': 0.0946,
+                        'Arg': 0.0959,
+                        'Asp': 0.1263}
+
+    values = sorted(nucleotide_values.values())
+    min_val = values[0]
+    max_val = values[-1]
 
     if mode == 'LTP':
         if 2 in tu_array and 0 in tu_array:
-            valid_central_chars = [k for k, v in char_values.items() if v < 4 and v > 1]
+            # central must not be min or max
+            valid_central_chars = [
+                k for k, v in nucleotide_values.items()
+                if min_val < v < max_val
+            ]
         elif 2 in tu_array:
-            valid_central_chars = [k for k, v in char_values.items() if v < 4]
+            # central cannot be maximum
+            valid_central_chars = [
+                k for k, v in nucleotide_values.items()
+                if v < max_val
+            ]
         elif 0 in tu_array:
-            valid_central_chars = [k for k, v in char_values.items() if v > 1]
+            # central cannot be minimum
+            valid_central_chars = [
+                k for k, v in nucleotide_values.items()
+                if v > min_val
+            ]
         else:
-            valid_central_chars = list(char_values.keys())
-    else:
+            valid_central_chars = list(nucleotide_values.keys())
+    else:  # LBP
         if 0 in tu_array:
-            valid_central_chars = [k for k, v in char_values.items() if v > 1]
+            valid_central_chars = [
+                k for k, v in nucleotide_values.items()
+                if v > min_val
+            ]
         else:
-            valid_central_chars = list(char_values.keys())
+            valid_central_chars = list(nucleotide_values.keys())
+
 
     central_char = random.choice(valid_central_chars)
-    central_value = char_values[central_char]
+    central_value = nucleotide_values[central_char]
 
     neighbors = []
     for value in tu_array:
         if mode == 'LTP':
             if value == 0:
-                neighbor_char = random.choice([k for k, v in char_values.items() if v < central_value])
+                neighbor_char = random.choice([k for k, v in nucleotide_values.items() if v < central_value])
             elif value == 1:
                 neighbor_char = central_char
             else:
-                neighbor_char = random.choice([k for k, v in char_values.items() if v > central_value])
+                neighbor_char = random.choice([k for k, v in nucleotide_values.items() if v > central_value])
         else:
             if value == 0:
-                neighbor_char = random.choice([k for k, v in char_values.items() if v < central_value])
+                neighbor_char = random.choice([k for k, v in nucleotide_values.items() if v < central_value])
             else:
-                neighbor_char = random.choice([k for k, v in char_values.items() if v >= central_value])
+                neighbor_char = random.choice([k for k, v in nucleotide_values.items() if v >= central_value])
         neighbors.append(neighbor_char)
 
     string_example = ''.join([central_char] + neighbors)
@@ -172,6 +217,79 @@ def get_neighborhood(tu_array, mode='LTP'):
         f'<div class="string-example"><span class="central">{string_example[0]}</span>{string_example[1:]}</div>',
         unsafe_allow_html=True
     )
+
+    # -------------------------
+    # Aminoacid Example
+    # -------------------------
+    st.markdown('<div class="section-header">Aminoacid Example</div>', unsafe_allow_html=True)
+    st.write("9-aminoacids matching sequence:")
+
+    values = sorted(aminoacid_values.values())
+    min_val = values[0]
+    max_val = values[-1]
+
+    if mode == 'LTP':
+        if 2 in tu_array and 0 in tu_array:
+            valid_central_chars = [
+                k for k, v in aminoacid_values.items()
+                if min_val < v < max_val
+            ]
+        elif 2 in tu_array:
+            valid_central_chars = [
+                k for k, v in aminoacid_values.items()
+                if v < max_val
+            ]
+        elif 0 in tu_array:
+            valid_central_chars = [
+                k for k, v in aminoacid_values.items()
+                if v > min_val
+            ]
+        else:
+            valid_central_chars = list(aminoacid_values.keys())
+    else:
+        if 0 in tu_array:
+            valid_central_chars = [
+                k for k, v in aminoacid_values.items()
+                if v > min_val
+            ]
+        else:
+            valid_central_chars = list(aminoacid_values.keys())
+
+    central_char = random.choice(valid_central_chars)
+    central_value = aminoacid_values[central_char]
+
+    neighbors = []
+    for value in tu_array:
+        if mode == 'LTP':
+            if value == 0:
+                neighbor_char = random.choice(
+                    [k for k, v in aminoacid_values.items() if v < central_value]
+                )
+            elif value == 1:
+                neighbor_char = central_char
+            else:
+                neighbor_char = random.choice(
+                    [k for k, v in aminoacid_values.items() if v > central_value]
+                )
+        else:
+            if value == 0:
+                neighbor_char = random.choice(
+                    [k for k, v in aminoacid_values.items() if v < central_value]
+                )
+            else:
+                neighbor_char = random.choice(
+                    [k for k, v in aminoacid_values.items() if v >= central_value]
+                )
+
+        neighbors.append(neighbor_char)
+
+    amino_string = [central_char] + neighbors
+
+    st.markdown(
+        f'<div class="string-example"><span class="central">{amino_string[0]}</span>{"".join(amino_string[1:])}</div>',
+        unsafe_allow_html=True
+    )
+
 
 # Main layout
 row1_col1, row1_col2 = st.columns([1, 3])
@@ -223,11 +341,10 @@ with row1_col2:
                 # Find the tu_array
                 tu_array = find_tu_array(tu_number, st.session_state.mode)
                 if tu_array:
-                    with results_col1:
-                        # Input Array
+                    with row1_col1:
                         st.markdown('<div class="section-header">Texture Unit Array</div>', unsafe_allow_html=True)
                         st.markdown(f'<div class="array-display">{{{", ".join(map(str, tu_array))}}}</div>', unsafe_allow_html=True)
-
+                    with results_col1:
                         # Neighborhood example
                         get_neighborhood(tu_array, st.session_state.mode)
                     
@@ -245,8 +362,8 @@ with row1_col2:
                             total_bin = sum(tu_array[j] * (3 if st.session_state.mode == 'LTP' else 2) ** j for j in range(i + 1))
                             rows.append([i, power_of, value, iteration_sum, total_bin])
 
-                        # Display table
-                        st.table(
+                        # Prepare DataFrame
+                        df = pd.DataFrame(
                             {
                                 "i Value": [row[0] for row in rows],
                                 f"Power of {'3' if st.session_state.mode == 'LTP' else '2'}": [row[1] for row in rows],
@@ -254,6 +371,13 @@ with row1_col2:
                                 "Iteration sum": [row[3] for row in rows],
                                 "Cumulative bin sum": [row[4] for row in rows],
                             }
+                        )
+
+                        # Hide index
+                        st.dataframe(
+                            df,
+                            use_container_width=True,
+                            hide_index=True
                         )
 
                         # Resulting Bin with success message styling
